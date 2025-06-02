@@ -1,6 +1,6 @@
 from math import sqrt, exp, log, ceil, floor
 from sympy import primerange, legendre_symbol, factorint
-
+import numpy as np
 
 class rho_method():
 
@@ -57,6 +57,8 @@ class BM_algorithm():
         self.n = n
         self.a = 1/sqrt(2)
         self.factor_base = self.generate_factor_base()
+        self.B_numbers = self.calculate_B_numbers()
+        self.vectors = self.create_vectors()
 
     def generate_factor_base(self):
         size = ceil((exp(sqrt(log(self.n) * log(log(self.n))))) ** self.a)
@@ -70,7 +72,7 @@ class BM_algorithm():
                 final_factor_base.append(i)
         return final_factor_base
     
-    def B_numbers(self):
+    def calculate_B_numbers(self):
         b_numbers = []
         alpha = sqrt(self.n)
         a = floor(alpha)
@@ -86,14 +88,14 @@ class BM_algorithm():
             u_new = a_new * v_new - u
             b_new = a * b_1 + b_2
             b_new_sq = (b_new ** 2) % self.n
-            print('*********')
-            print(f'v = {v_new}')
-            print(f'alpha = {alpha_new}')
-            print(f'a = {a_new}')
-            print(f'u = {u_new}')
-            print(f'b = {b_new}')
-            print(f'b_new_sq = {b_new_sq}')
-            print('*********')
+            # print('*********')
+            # print(f'v = {v_new}')
+            # print(f'alpha = {alpha_new}')
+            # print(f'a = {a_new}')
+            # print(f'u = {u_new}')
+            # print(f'b = {b_new}')
+            # print(f'b_new_sq = {b_new_sq}')
+            # print('*********')
             can_form_b_new_sq = [i for i in factorint(b_new_sq).keys()]
             check = []
             for i in can_form_b_new_sq:
@@ -107,16 +109,30 @@ class BM_algorithm():
             u = u_new
             b_1, b_2 = b_new, b_1
             counter += 1
-        return self.factor_base, b_numbers
+        return b_numbers
     
+    def create_vectors(self):
+        vectors = []
+        for i in range(len(self.B_numbers)):
+            v = [0] * len(self.factor_base)
+            b_num_main = [j for j in factorint(self.B_numbers[i]).keys()]
+            b_num_power = [j for j in factorint(self.B_numbers[i]).values()]
+            for k in range(len(b_num_main)):
+                ind = self.factor_base.index(b_num_main[k])
+                v[ind] = b_num_power[k] % 2
+            vectors.append(v)
+        return vectors
     
-
-            
-
-            
+    def solve_system(self):
+        vectors = self.vectors
+        print(vectors)
+        matrix_A = np.array(vectors).T.tolist()
+        pass
+        
 
 
     
+  
 
 
 
@@ -125,5 +141,13 @@ n = 17873
 div1 = rho_method(n).rho_Pollard_factorization()
 print(div1)
 
-div2 = BM_algorithm(n).B_numbers()
+div2 = BM_algorithm(n).generate_factor_base()
+print(div2)
+
+div2 = BM_algorithm(n).calculate_B_numbers()
+print(div2)
+div2 = BM_algorithm(n).create_vectors()
+print(div2)
+
+div2 = BM_algorithm(n).solve_system()
 print(div2)
