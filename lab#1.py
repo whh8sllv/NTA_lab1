@@ -1,14 +1,17 @@
 def rho_Pollard_factorization(n):
     x, y = 2, 2
-    d = 1
-    for i in range(10):
+    while True:
         x_new = calculate_xi(x, n)
         y_new = calculate_yi(y, n)
         d = calculate_gcd(x_new, y_new, n)
         x = x_new
         y = y_new
+        if x == y:
+            return 'Алгоритм не знайшов дільника із заданими початковими значеннями'
         print(f'x new = {x}')
         print(f'y_new = {y}')
+        if d != 1 and d != n:
+            return d
 
 
 def calculate_f(x, n):
@@ -41,6 +44,6 @@ def extended_EA(a, b):
     return (b, u1, v1)
 
 
-n = 527
+n = 2485021628404193
 
-rho_Pollard_factorization(n)
+print(rho_Pollard_factorization(n))
