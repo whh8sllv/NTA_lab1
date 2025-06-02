@@ -16,7 +16,8 @@ class rho_method():
             x = x_new
             y = y_new
             if x == y:
-                return 'Алгоритм не знайшов дільника із заданими початковими значеннями'
+                print('Алгоритм не знайшов дільника із заданими початковими значеннями')
+                return 0
             if d != 1 and d != self.n:
                 return d
 
@@ -88,14 +89,6 @@ class BM_algorithm():
             u_new = a_new * v_new - u
             b_new = a * b_1 + b_2
             b_new_sq = (b_new ** 2) % self.n
-            # print('*********')
-            # print(f'v = {v_new}')
-            # print(f'alpha = {alpha_new}')
-            # print(f'a = {a_new}')
-            # print(f'u = {u_new}')
-            # print(f'b = {b_new}')
-            # print(f'b_new_sq = {b_new_sq}')
-            # print('*********')
             can_form_b_new_sq = [i for i in factorint(b_new_sq).keys()]
             check = []
             for i in can_form_b_new_sq:
@@ -129,25 +122,14 @@ class BM_algorithm():
         matrix_A = np.array(vectors).T.tolist()
         pass
         
+n = 1495056764861639599
+d = rho_method(n).rho_Pollard_factorization()
+print(d)
+n = int(n/d)
 
-
+while rho_method(n).rho_Pollard_factorization() != 0:
     
-  
-
-
-
-n = 17873
-
-div1 = rho_method(n).rho_Pollard_factorization()
-print(div1)
-
-div2 = BM_algorithm(n).generate_factor_base()
-print(div2)
-
-div2 = BM_algorithm(n).calculate_B_numbers()
-print(div2)
-div2 = BM_algorithm(n).create_vectors()
-print(div2)
-
-div2 = BM_algorithm(n).solve_system()
-print(div2)
+    d = rho_method(n).rho_Pollard_factorization()
+    n = int(n / d)
+    print(f'n = {n}')
+    print(f'd = {d}')
